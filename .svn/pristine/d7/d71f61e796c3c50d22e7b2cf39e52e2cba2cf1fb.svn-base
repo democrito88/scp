@@ -1,0 +1,14 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['Nome'])) {
+    $nome = $_POST['Nome'];
+    $username = $_POST['Username'];
+    $senha = $_POST['Senha'];
+    $setorId = $_POST['Setor'];
+    $privilegioId = $_POST['Privilegio'];
+    $conn->query("insert into tb_usuario (CodSetor, CodPrivilegio, Nome, NomeUsuario, Senha) values ('$setorId', '$privilegioId', '$nome', '$username', md5(md5('$senha')))");
+    $ultimo_valor_inserido = mysqli_insert_id($conn);
+    salvarLog('I', 'tb_usuario', $ultimo_valor_inserido, '');
+}
+?>

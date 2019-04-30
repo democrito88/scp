@@ -1,0 +1,14 @@
+<?php
+
+function conectarBD() {
+    $host = "192.168.0.106";
+    $usuario = "scp";
+    $senha = "scp";
+    $baseDeDados = "scp";
+
+    return mysqli_connect($host, $usuario, $senha, $baseDeDados);
+}
+
+function desconectarBD($conexao) {
+    return mysqli_close($conexao);
+}

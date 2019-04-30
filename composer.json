@@ -1,0 +1,5 @@
+{
+    "require": {
+        "proner/phppimaco": "^1.3"
+    }
+}

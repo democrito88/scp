@@ -1,0 +1,11 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['eNome'])) {
+    $nome = $_POST['eNome'];
+    $username = $_POST['eUsername'];
+    $senha = $_POST['eSenha'];
+    $id = $_POST['memid'];
+    $conn->query("update member set firstname='$nome', lastname='$username', senha=md5(md5('$senha')) where memberid='$id'");
+}
+?>

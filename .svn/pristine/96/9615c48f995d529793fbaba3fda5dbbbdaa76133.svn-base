@@ -1,0 +1,22 @@
+<?php
+
+//contra injeções SQL e JavaScript
+function issetGetOuPostComRetorno($getOuPost) {
+    if (isset($_GET[$getOuPost])) {
+        return $_GET[$getOuPost];
+    } else if (isset($_POST[$getOuPost])) {
+        return $_POST[$getOuPost];
+    } else {
+        return '';
+    }
+}
+
+function getURLPadrao() {
+    if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+        $protocol = 'https://';
+    } else {
+        $protocol = 'http://';
+    }
+    $url = $protocol . $_SERVER['HTTP_HOST'] . '/scp';
+    return $url;
+}

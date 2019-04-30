@@ -1,0 +1,14 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['eNome'])) {
+    $nome = retirarInjecao($_POST['eNome']);
+    $username = retirarInjecao($_POST['eUsername']);
+    $senha = retirarInjecao($_POST['eSenha']);
+    $setorId = retirarInjecao($_POST['eSetor']);
+    $privilegioId = retirarInjecao($_POST['ePrivilegio']);
+    $id = retirarInjecao($_POST['memid']);
+    $conn->query("update tb_usuario set CodSetor='$setorId', CodPrivilegio = '$privilegioId', Nome='$nome', NomeUsuario='$username', Senha=md5(md5('$senha')) where id='$id'");
+    salvarLog('U', 'tb_usuario', $id, '');
+}
+?>

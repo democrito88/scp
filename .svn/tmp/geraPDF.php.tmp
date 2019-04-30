@@ -1,0 +1,111 @@
+<?php
+
+require_once "../vendor/autoload.php";
+
+use Proner\PhpPimaco\Pimaco;
+use Proner\PhpPimaco\Tag;
+
+include_once 'EtiquetaPDF.php';
+include_once '../util/antiInjecao.php';
+include_once '../util/conexaoBD.php';
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $complementoBuscaPessoaEndereco = "";
+    $listaIDs = array();
+    $listaIDs = isset($_POST['ids']) ? $_POST['ids'] : null;
+    $etiquetasVazias = isset($_POST['etiquetasVazias']) ? $_POST['etiquetasVazias'] : 0;
+    
+    $complementoBuscaPessoaEndereco .= " AND p.ID IN (";
+    foreach ($listaIDs as $id) {
+        $complementoBuscaPessoaEndereco .= " " . retirarInjecao($id) . " , ";
+    }
+    $complementoBuscaPessoaEndereco = substr($complementoBuscaPessoaEndereco, 0, strlen($complementoBuscaPessoaEndereco) - 3);
+    $complementoBuscaPessoaEndereco .= " );";
+    //isset($_POST['ID'])? $complementoBuscaPessoaEndereco .= " AND p.ID = '".retirarInjecao($_POST['ID'])."' " : $complementoBuscaPessoaEndereco .= "";
+
+    $queryBuscaPessoaEndereco = "SELECT p.ID Codigo,
+       p.Nome,
+       e.Pais,
+       e.CEP,
+       e.UF,
+       e.Municipio,
+       e.Bairro,
+       e.Endereco,
+       e.Numero AS eNumero,
+       e.Complemento,
+       t.ddd,
+       t.Numero,
+       t.Descricao,
+       concat('(', DDD, ') ', t.Numero, ' - ', t.Descricao) TelefoneFormatado,
+       concat(Endereco, ', n.º ', e.Numero, ' Bairro: ', e.Bairro, ', ', e.Municipio, '-', e.UF, ' - ', e.CEP) EnderecoCompleto
+FROM tb_pessoa p
+LEFT JOIN tb_endereco e ON p.id = e.codpessoa
+LEFT JOIN tb_telefone t ON p.id = t.codpessoa
+WHERE NOT p.excluido " . $complementoBuscaPessoaEndereco;
+    //echo $queryBuscaPessoaEndereco;
+    $conexao = conectarBD();
+    $resultados = mysqli_query($conexao, $queryBuscaPessoaEndereco);
+    desconectarBD($conexao);
+
+    $data = array();
+    $datas = array();
+//    $etiquetaPDF = new EtiquetaPDF('P', 'mm', 'letter');
+//    $etiquetaPDF->setMargemPapelCarta();
+//    $etiquetaPDF->SetFont('Arial', '', 8);
+//    $etiquetaPDF->AddPage();
+//    while ($resultado = mysqli_fetch_assoc($resultados)) {
+//        $data[0] = $resultado['Nome'];
+//        $data[1] = utf8_decode($resultado['Endereco']);
+//        $data[2] = 'n.º' . $resultado['eNumero'];
+//        $data[3] = $resultado['Complemento'] != '' ? 'Complemento: ' . $resultado['Complemento'] : '';
+//        $data[4] = 'Bairro: ' . utf8_decode($resultado['Bairro']);
+//        $data[5] = utf8_decode($resultado['Municipio'] . ' - ' . $resultado['UF']);
+//        $data[6] = 'CEP: ' . $resultado['CEP'];
+//        array_push($datas, $data);
+//    }
+//    $etiquetaPDF->distribuirEmPaginas($datas);
+//    $etiquetaPDF->Output();
+//    $pimaco = new Pimaco('5580M');
+//    $pimaco = new Pimaco('6285');
+    $pimaco = new Pimaco('6182_SEFAD');
+//    $pimaco = new Pimaco('8099L');
+//    $pimaco = new Pimaco('A4048');
+    $col = 1;
+    
+    //Gerar etiquetas vazias
+    if($etiquetasVazias != 0){
+        for($auxiliar = 0; $auxiliar < $etiquetasVazias; $auxiliar++){
+            $tag = new Tag();
+            for($j=0; $j < 10; $j++){
+                $tag->p('')->br();
+            }
+            $tag->setBorder(0.1);
+            $pimaco->addTag($tag);
+        }
+    }
+    
+    //gerar Etiquetas cheias
+    while ($resultado = mysqli_fetch_assoc($resultados)) {
+        $tag = new Tag();
+        $tag->p('')->br();
+//            $tag->qrcode("https://www.google.com/maps/place/Rua Justa Monteiro, 250, Caruaru PE")->setAlign("right");
+//            $tag->img("../img/loguinho.png")->setHeight(15)->setAlign('right')->setMargin(2);
+        //SE O RESTO DA DIVISAO POR 2 ==0 É A COLUNA 2, DAI PRECISA DE UM ESPAÇAMENTO PARA FUNCIONAR NO MODELO 6182 SEFAD IMPRESSO NA OKI
+        $tag->p($col % 2 == 0 ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "");
+        $tag->p(utf8_decode($resultado['Nome']))->b()->br();
+        $tag->p($col % 2 == 0 ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "");
+        $tag->p(utf8_decode($resultado['Endereco']) . ', n.º ' . $resultado['eNumero']);
+        $tag->p($resultado['Complemento'] != '' ? ' - ' . $resultado['Complemento'] : '')->br();
+        $tag->p($col % 2 == 0 ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "");
+        $tag->p(utf8_decode($resultado['Bairro']) . ' - ' . utf8_decode($resultado['Municipio'] . ' - ' . $resultado['UF']))->br();
+        $tag->p($col % 2 == 0 ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" : "");
+        $tag->p("CEP: " . $resultado['CEP'])->br();
+//            $tag->barcode($resultado['Codigo'], 'TYPE_CODE_128')->setWidth(1.5)->setHeight(20)->setMargin(2)->br();
+        $tag->setBorder(0.0);
+        $pimaco->addTag($tag);
+        $col++;
+    }
+
+    $pimaco->output();
+    salvarLog('G', '', '', 'Modelo PDF gerado: 6182');
+}

@@ -1,0 +1,9 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['memid'])) {
+    $id = retirarInjecao($_POST['memid']);
+    $conn->query("update tb_usuario set excluido = true where ID='$id'");
+    salvarLog('D', 'tb_usuario', $id, '');
+}
+?>

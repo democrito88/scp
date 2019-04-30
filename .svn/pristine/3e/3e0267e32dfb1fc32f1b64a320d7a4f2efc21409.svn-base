@@ -1,0 +1,104 @@
+<div id="dataDeNascimento" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Consulta por aniversário</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form class="form-inline" action="<?php echo getURLPadrao(); ?>/relatorio/gerarRelatorio.php" method="POST" >
+                <div class="modal-body">
+                    <p>Escolha a data inicial e final para consulta de aniversariantes</p>
+                    &nbsp; De &nbsp;<div class="form-group mb-2">
+                        <input autofocus class="form-control" type="date" name="dataNascimentoInicial">
+                    </div>&nbsp; até
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input class="form-control" type="date" name="dataNascimentoFinal">
+                    </div>
+                    <p class="text-warning">
+<!--                        <small>If you don't save, your changes will be lost.</small>-->
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <!--<button type="button" type="submit" class="btn btn-primary">Buscar</button>-->
+                    <button class="btn btn-success" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="porNome" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Consulta por nome</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form class="form-inline" action="<?php echo getURLPadrao(); ?>/relatorio/gerarRelatorio.php" method="POST" >
+                <div class="modal-body">
+                    <p>Digite o nome da pessoa:</p>
+                    <input autofocus class="form-control form-control-lg" type="text" id="nome" name="nome" placeholder="Nome da pessoa">
+                    <p class="text-warning">
+                        <br><small>A consulta pode retornar muitos dados.</small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <!--<button type="button" type="submit" class="btn btn-primary">Buscar</button>-->
+                    <button class="btn btn-success" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="porCPF" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Consulta por CPF</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form class="form-inline" action="<?php echo getURLPadrao(); ?>/relatorio/gerarRelatorio.php" method="POST" >
+                <div class="modal-body">
+                    <p>Digite o CPF:</p>
+
+<!--<input autofocus onblur="TestaCPF(this)" onkeypress="mascara(this)" class="form-control form-control-lg" type="text" id="cpf" name="cpf" placeholder="">-->
+                    <input autofocus onblur="TestaCPF(this)" onkeypress="mascara(this)" class="form-control form-control-lg" type="text" id="CPF" name="cpf" placeholder="" >
+                    <p class="text-warning">
+<!--                        <small>If you don't save, your changes will be lost.</small>-->
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <!--<button type="button" type="submit" class="btn btn-primary">Buscar</button>-->
+                    <button class="btn btn-success" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="porBairro" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Consulta por bairro</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form class="form-inline" action="<?php echo getURLPadrao(); ?>/relatorio/gerarRelatorio.php" method="POST" >
+                <div class="modal-body">
+                    <p>Digite o bairro</p>
+                    <input autofocus class="form-control form-control-lg" type="text" id="bairro" name="Bairro" placeholder="">
+                    
+                    <p class="text-warning">
+                        <br><small>A consulta pode retornar muitos dados.</small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <!--<button type="button" type="submit" class="btn btn-primary">Buscar</button>-->
+                    <button class="btn btn-success" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

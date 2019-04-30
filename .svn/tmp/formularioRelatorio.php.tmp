@@ -1,0 +1,90 @@
+<?php
+
+include_once '../util/corpo.php';
+
+cabecalho();
+?>
+
+    <script src="../js/ajax/formularioRelatorio.js"></script>
+   <form action="gerarRelatorio.php" method="POST" class="form-check-inline form-check form-group alinh">
+   <div class="container ">
+       <h2>Buscar Pessoas</h2>
+       <hr>
+      <div class="row">
+<!--         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class=" control-label" for="">Nome&nbsp;</label>
+               <input type="checkbox" onclick="toggleInput('nome');">
+               <div id="nome" style="display: none;">
+               </div>
+            </div>
+         </div>-->
+              
+         <div class="col-sm-4">
+             <label class="form-group form-check">Faz Aniversário&nbsp;</label>                 
+             <input type="date" name="dataNascimentoInicial">
+             <input type="date" name="dataNascimentoFinal">
+<!--            <div class="form-group form-check">
+               <label class=" control-label" for="">Faz Aniversário&nbsp;</label>
+               <input type="checkbox" onclick="toggleInput('dataNascimento');"><br>
+               <div id="dataNascimento" style="display: none;"></div>
+            </div>-->
+         </div>
+<!--         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class=" control-label" for="">Estado&nbsp;</label>
+               <input type="checkbox" onclick="toggleInput('UF');"><br>
+               <div id="UF" style="display: none;"></div>
+            </div>
+         </div>-->
+      </div>
+<!--      <div class="row">
+         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class=" control-label" for="">Cidade&nbsp;</label>   
+               <input type="checkbox" onclick="toggleInput('cidade');"><br>
+               <div id="cidade" style="display: none;"></div>
+            </div>
+         </div>
+         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class="col-md control-label" for="">CPF&nbsp;&nbsp;&nbsp;</label>
+               <input type="checkbox" onclick="toggleInput('cpf');"><br>
+               <div id="cpf" style="display: none;"></div>
+            </div>
+         </div>
+         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class="col-md control-label" for="">RG&nbsp;&nbsp;&nbsp;</label>
+               <input type="checkbox" onclick="toggleInput('rg');"><br>
+               <div id="rg" style="display: none;"></div>
+            </div>
+<<<<<<< .mine
+        </div>
+        <br>
+        <button class="btn btn-success " type="submit">Gerar Relatório</button>
+    </form>
+</section>
+=======
+         </div>
+      </div>-->
+<!--      <div class="row">
+         <div class="col-sm-4">
+            <div class="form-group form-check">
+               <label class="col-md control-label" for="">CEP&nbsp;&nbsp;&nbsp;</label>  
+               <input type="checkbox" onclick="toggleInput('cep');"><br>
+               <div id="cep" style="display: none;"></div>
+            </div>
+         </div>
+      </div>-->
+   </div>
+   <br>
+   <br>
+   <button class="btn btn-success" type="submit">Gerar Relatório</button>
+</form>
+     
+
+>>>>>>> .r53
+<?php
+
+rodape();

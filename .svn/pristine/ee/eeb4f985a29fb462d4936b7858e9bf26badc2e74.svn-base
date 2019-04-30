@@ -1,0 +1,67 @@
+<?php 
+$indice = isset($_GET['alerta'])? $_GET['alerta'] : null;
+?>
+<!DOCTYPE html>
+<html>
+    <head> 
+        <link rel="icon" href="img/logo.png" />
+        <title>Sistema de Cadastro de Pessoas</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/estilo.css">
+        <link rel="stylesheet" type="text/css" href="css/estilo_login.css">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="js/scripts.js"></script>
+
+    </head>
+    <body onload="mostrarAlerta(<?php echo $indice?>);">
+        <div id="divAlerta" class="divAlerta"></div>
+        <section class="bcklogin" >
+            <div class="wrapper fadeInDown">
+                <div id="formContent">
+                    <!-- Tabs Titles -->
+
+                    <!-- Icon -->
+                    <div class="fadeIn first">
+                        <img height="250" width="250" id="logo" class="img-responsive" src="img/logo.jpg">
+                    </div>
+
+                    <!-- Login Form -->
+                    <form action="util/validarLogin.php" method="POST">
+                        <input type="text" id="login" class="fadeIn second" name="login" placeholder="Usuário">
+                        <input type="password" id="password" class="fadeIn third" name="senha"  placeholder="Senha">
+                        <input type="submit" class="fadeIn fourth" value="Logar">
+                    </form>
+
+                    <!--     Remind Passowrd 
+                        <div id="formFooter">
+                          <a class="underlineHover" href="#">Esqueceu a senha?</a>
+                        </div>-->
+
+                </div>
+            </div>
+        </section>
+    </body>
+
+    <!--    <body style="background-color: lightgreen;">
+            <div class="panel panel-default" style="width: 30%; height: 30%; margin: 35%; position: relative;">
+                <div class="panel-heading">
+                    <h3>Faça o seu Login</h3>
+                </div>
+                <div class="panel-body">
+                    <form action="util/validarLogin.php" method="POST">
+                        <label>Login: </label>
+                        <input type="text" name="login" required><br>
+                        <label>Senha: </label>
+                        <input type="password" name="senha" required><br><br>
+                        <button class="btn btn-success">Entrar</button>
+                    </form>
+                </div>
+            </div>
+        </body>-->
+</html>

@@ -1,0 +1,429 @@
+<?php
+// Conecta ao banco de dados
+include './conexaoBD.php';
+$mysqli = conectarBD();
+// Verifica se ocorreu algum erro
+if (mysqli_connect_error()) {
+    die('Não foi possível conectar-se ao banco de dados: ' . mysqli_connect_error());
+    exit();
+}
+
+$num_registro = 15;
+$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 0;
+if (empty($pagina)) {
+    $pagina = 1;
+}
+$inicio = ($pagina * $num_registro) - $num_registro;
+$queryTotal = "SELECT p.ID Codigo,
+       p.Nome,
+       e.Pais,
+       e.CEP,
+       e.UF,
+       e.Municipio,
+       e.Bairro,
+       e.Endereco,
+       e.Numero,
+       e.Complemento,
+       t.ddd,
+       t.Numero,
+       t.Descricao,
+       concat('(', DDD, ') ', t.Numero, ' - ', t.Descricao) TelefoneFormatado,
+       concat(Endereco, ', n.º ', e.Numero, ' B.: ', e.Bairro, ', ', e.Municipio, '-', e.UF, ' - ', e.CEP) EnderecoCompleto
+FROM tb_pessoa p
+INNER JOIN tb_endereco e ON p.id = e.codpessoa
+INNER JOIN tb_telefone t ON p.id = t.codpessoa
+WHERE NOT p.excluido";
+$sqlCont = $mysqli->query("$queryTotal LIMIT $inicio, $num_registro"); // Crio uma query com limitação de registros
+$numCont = $sqlCont->num_rows;
+
+$sqlTotal = $mysqli->query("$queryTotal"); //faço uma query para o número total de registros no banco
+$numTotal = $sqlTotal->num_rows;
+
+if ($numCont > 0) {
+    for ($x = 0; $x < $numCont; $x++) { // faço um for até o número máximo de registros que quero que apareça na página
+        $dados = $sqlCont->fetch_assoc();
+
+        $data = date('d/m/Y', strtotime($dados['data'])); // Convertendo para o padrão Brasileiro
+    }
+}
+?>
+
+<!DOCTYPE html>
+<head>
+    <script src="js/mascara.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/valida_CPF.js"></script>
+    <link href="css/estilo.css" rel="stylesheet" />
+    <title>Cadastro de Pessoas</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+    <img height="250px" width="250px" id="logo"class="img-responsive" src="img/logo.jpg">
+    <form class="form-horizontal col-md-12" name="form-pessoa" action="insert.php" method="POST">
+        <fieldset>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Cadastro de Usuario</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-2 control-label">
+                            <p class="help-block">
+                            <h11>* <b>Campo Obrigatório</b> </h11>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="Nome">
+                            CPF 
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input onblur="TestaCPF(this)" onkeypress="mascara(this)" name="CPF" class="form-control input-md" id="cpf" required="" type="text" maxlength="14" pattern="[0-9\.\-]+$">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="Nome">
+                            Nome 
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-5">
+                            <input id="nome" name="Nome" placeholder="" class="form-control input-md" required="" type="text">
+                        </div>
+                        <label class="col-md-1 control-label" for="Nome">
+                            Apelido
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input id="apelido" name="Apelido" placeholder="" class="form-control input-md" required="" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="Nome">
+                            Nome Do Pai
+                        </label>
+                        <div class="col-md-8">
+                            <input id="nomeDoPai" name="NomeDoPai" placeholder="" class="form-control input-md" required="" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="Nome">
+                            Nome Da Mãe
+                        </label>
+                        <div class="col-md-8">
+                            <input id="nomeDaMae" name="NomeDaMae" placeholder="" class="form-control input-md" required="" type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="Nome">
+                            Nascimento
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input type="date" name="DataNascimento" id="dataNascimento" placeholder="DD/MM/AAAA" class="form-control input-md" required=""  OnKeyPress="formatar('##/##/####', this)">
+                        </div>
+                    </div>
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        RG
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="prependedtext" name="RG" placeholder="Apenas números" class="form-control input-md" required="" type="text" >
+                        </div>
+                    </div
+                    <label class="col-md-2 control-label" for="prependedtext"></label>
+                    <div class="col-md">
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Orgão Emissor</span>
+                                <select  class="form-control-static" id="orgaoEmissorRG" name="OrgaoEmissorRG">
+                                    <option value=""> </option>
+                                    <option value="SSP">SSP</option>
+                                    <option value="SDS">SDS</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">UF Emissor</span>
+                            <select  class="form-control-static" id="ufEmissorRG" name="UFEmissorRG">
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MS">MS</option>
+                                <option value="MT">MT</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        Sexo 
+                        <h11>*</h11>
+                    </label>
+                    <div class="radio col-md-10">
+                        <label><input type="radio" name="Sexo" value="Não informado" checked >Não Informado</label><span>&nbsp&nbsp&nbsp</span>
+                        <label><input type="radio" name="Sexo" value="Feminino">Feminino</label><span>&nbsp&nbsp&nbsp</span>
+                        <label><input type="radio" name="Sexo" value="Masculino">Masculino</label>
+                    </div>
+
+                </div>   
+                <label class="col-md-2 control-label" for="prependedtext">
+                    Estado Civil
+                    <h11>*</h11>
+                </label>
+                <div class="col-md-1">
+                    <div class="input-group">
+
+                        <select id="ufn" class="form-control-static" name="EstadoCivil" >
+                            <option value="Não informado">Não informado</option>
+                            <option value="Solteiro(a)">Solteiro(a)</option>
+                            <option value="Casado(a)">Casado(a)</option>
+                            <option value="Divorciado(a)">Divorciado(a)</option>
+                        </select>
+                    </div>
+                </div><BR><br>
+                <hr>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        Telefone 
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                            <!--<input pattern="\([0-9]{2}\)[\s][0-9]{4,5}-[0-9]{4}" class="telefone" name="" maxlength="15" placeholder="fixo ou celular com DDD" required>-->
+                            <input type="text" name="NumeroTelefone" id="numeroTelefone" size="20"  maxlength="15" class="form-control" placeholder="(XX) XXXXX-XXXX"  onkeypress="mascara(this)"> 
+                            <span class="input-group-addon">Descrição</span>
+                            <!--<input pattern="\([0-9]{2}\)[\s][0-9]{4,5}-[0-9]{4}" class="telefone" name="" maxlength="15" placeholder="fixo ou celular com DDD" required>-->
+                            <input type="text" name="DescricaoTelefone" id="descricaoTelefone" size="20" maxlength="20" value="Pessoal" class="form-control" > 
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        Email 
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                            <input id="email" name="Email" class="form-control" type="email" placeholder="email@domimio.com.br" required="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" >
+                            <span class="input-group-addon">Descrição</span>
+                            <input id="descricaoEmail" name="DescricaoEmail" class="form-control" type="text" value="Pessoal" required="">
+                        </div>
+                    </div>
+                </div>
+                <hr >
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        Naturalidade
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-1">
+                        <div class="input-group">
+                            <span class="input-group-addon">UF</span>
+                            <select id="ufn" class="form-control-static" name="NaturalidadeUF" >
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MS">MS</option>
+                                <option value="MT">MT</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Cidade
+                                <h11>*</h11>
+                            </span>
+                            <input id="naturalidadeMunicipio" name="NaturalidadeMunicipio" class="form-control" placeholder="" required=""  type="text">
+                        </div>
+                    </div>
+                </div>
+                <hr width="100%" />
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="CEP">
+                        CEP 
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-2">
+                        <input id="cep" name="CEP" onkeypress="mascara(this)" id="cep" placeholder="Apenas números" class="form-control input-md" required="" value="" type="search" maxlength="9" pattern="[0-9\-]+$">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary" onclick="pesquisacep(cep.value)">Pesquisar</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="prependedtext">
+                        Endereço
+                        <h11>*</h11>
+                    </label>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">Estado</span>
+                            <select id="estado" class="form-control-static" name="UF">
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MS">MS</option>
+                                <option value="MT">MT</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Cidade
+                                <h11>*</h11>
+                            </span>
+                            <input id="cidade" name="Municipio" class="form-control" placeholder="" required=""  type="text">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                Bairro
+                                <h11>*</h11>
+                            </span>
+                            <input id="bairro" name="Bairro" class="form-control" placeholder="" required=""  type="text">
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    Logroduro
+                                    <h11>*</h11>
+                                </span>
+                                <input id="rua" name="Endereco" class="form-control" placeholder="" required=""  type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <!--                    <div class="col-md-2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    Nº 
+                                                    <h11>*</h11>
+                                                </span>
+                                                <input id="numero" name="numero" class="form-control" placeholder="" required=""  type="text">
+                                            </div>
+                                        </div>-->
+                    <br><br><br>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext"></label>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    Complemento
+                                    <h11>*</h11>
+                                </span>
+                                <!--<select id="cidade"  class="form-control-static" name="cidade"></select-->
+                                <input id="complemento" name="Complemento" class="form-control" type="text"> 
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    Nº 
+                                    <h11>*</h11>
+                                </span>
+                                <input id="numero" name="Numero" class="form-control" placeholder="" required=""  type="text">
+                            </div>
+                        </div>
+                        <label class="col-md-1 control-label" for="prependedtext">
+                            Tipo de residência 
+                            <!--<h11>*</h11>-->
+                        </label>
+                        <div class="radio col-md">
+                            <label><input type="radio" name="TipoDeResidencia" value="Não informado" id="nInformado" checked>Não Informado</label><span>&nbsp&nbsp&nbsp</span>
+                            <label><input type="radio" name="TipoDeResidencia" value="Própria" id="feminino">Própria</label><span>&nbsp&nbsp&nbsp</span>
+                            <label><input type="radio" name="TipoDeResidencia" value="Alugada" id="masculino">Alugada</label>
+                        </div>
+                    </div>
+                    <br>
+
+                    <br><br><br><br>
+                    <div class="form-group">
+                        <label class="col-md-5 control-label" for="Cadastrar"></label>
+                        <div class="col-md">
+                            <button id="Cadastrar" name="Cadastrar" class="btn-lg btn-success" type="Submit">Cadastrar</button>
+                            <button id="Cancelar" name="Cancelar" class="btn-lg btn-danger" type="Reset">&nbsp&nbspLimpar&nbsp&nbsp</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>

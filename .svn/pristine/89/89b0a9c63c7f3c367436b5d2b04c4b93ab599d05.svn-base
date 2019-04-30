@@ -1,0 +1,101 @@
+/*amarelo olinda :#ffcc2a*/
+/*azul olinda :#006eb4*/
+h11 {
+    color:red;
+
+}
+
+#logo {
+    /*
+    margin-left:105%;*/
+
+    /*align-content: center;*/
+    margin-left: auto;
+    margin-right: auto ;
+    max-width:250px;
+    max-height:250px;
+    display: flex;
+    align-items: center ;
+
+}
+
+.panel-heading{
+    font-size:150%;
+    text-align: center;
+
+
+}
+
+hr {
+    height:3px;
+    border-width:0;
+    background: transparent url(../img/linha.jpg) center no-repeat;
+}
+
+.formes{
+    text-align: center;
+}
+
+
+.est_fr{
+
+    width: 15%;
+    align-content: center;
+    color: #101010;
+    text-align: center;
+    margin-left:  45%;
+}
+
+.alinh{
+    text-align: center;
+    padding: 2% 0 23.5% 11%;
+    overflow: no-display;
+    max-height: 100%;
+    
+      
+}
+.direita{
+/*   float: right;*/
+   margin-left:  80% !important;
+   top:5% !important;
+}
+.secn{
+    padding: 1% 2% 23% 20%;
+
+}
+.barra{
+    background-color: #428bca;
+    width: 100%;   
+    min-height: 20px;
+    height: 3%;
+    max-height: 20px;
+}
+
+.rodape{
+    bottom: 0;
+    background-color: #ffcc2a;
+    color: black;
+    text-align: center;
+    padding: 2% 0;
+}
+.alinh2{
+    text-align: center;
+    padding: 0% 25% 6% 25%;
+}
+ul{
+    list-style-type:  none;
+}
+
+.alinh3{
+    text-align: center;
+    padding: 0% 25% 17% 25%;
+    
+
+}
+ .bg-primary {
+        background-color: #006eb4 !important;
+    }
+    .fix.btn{
+        float: left;
+        align-content: center;
+    }

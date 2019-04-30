@@ -1,0 +1,8 @@
+<?php
+include_once 'util.php';
+
+session_start(); //necessário até mesmo no logout
+unset($_SESSION['Nome']);
+session_destroy();
+
+header('Location: ' . getURLPadrao() . '/login.php');

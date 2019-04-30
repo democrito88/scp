@@ -1,0 +1,62 @@
+<?php
+
+include_once 'testarSessao.php';
+
+function cabecalho() {
+    session_start();
+    testarSessao();
+    echo '
+<!DOCTYPE html>
+<html>
+<head>
+<<<<<<< .mine
+   <script src="http://localhost/scp/js/mascara.js"></script>
+=======
+   <script src="../js/mascara.js"></script>
+>>>>>>> .r12
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<<<<<<< .mine
+   <script src="http://localhost/scp/js/scripts.js"></script>
+   <script src="http://localhost/scp/js/valida_CPF.js"></script>
+   <script src="http://localhost/scp/js/formularioRelatorio.js"></script>
+   <script src="http://localhost/scp/js/cidades-estados-1.2-utf8.js"></script>
+   <link href="http://localhost/scp/css/estilo.css" rel="stylesheet" />
+   
+   
+=======
+   <script src="../js/scripts.js"></script>
+   <script src="../js/valida_CPF.js"></script>
+   <script src="../js/formularioRelatorio.js"></script>
+   <script src="../js/cidades-estados-1.2-utf8.js"></script>
+   <link href="../css/estilo.css" rel="stylesheet" />   
+>>>>>>> .r12
+   <title>Cadastro de Pessoas</title>
+   <meta charset="utf-8"/>
+</head>
+<body>
+<header>
+<<<<<<< .mine
+<img height="250px" width="250px" id="logo" class="img-responsive" src="http://localhost/scp/img/logo.jpg">
+<div class="direita">Bem vindo(a), ' . $_SESSION['Nome'] . ' | <a href="http://localhost/scp/util/logout.php">Logout</a></div><br>
+=======
+<img height="250px" width="250px" id="logo" class="img-responsive" src="../img/logo.jpg">
+<div class="direita">Bem vindo(a), ' . $_SESSION['Nome'] . ' | <a href="../util/logout.php">Logout</a></div><br>
+>>>>>>> .r12
+</header>
+';
+}
+
+function rodape() {
+    echo '
+        
+<!-- Footer -->
+<footer class="rodape">
+  <p> Sistema de Cadastro de Pessoas - Prefeitura Municipal de Olinda </p> 
+</footer>
+
+</body>
+          </html>';
+}

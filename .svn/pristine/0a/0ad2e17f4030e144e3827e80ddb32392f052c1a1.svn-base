@@ -1,0 +1,40 @@
+function toggleInput(id) {
+    var div = document.getElementById(id);
+    if (div.style.display === "none") {
+        insereInput(id);
+        div.style.display = "block";
+    } else {
+        div.innerHTML = "";
+        div.style.display = "none";
+    }
+}
+
+function insereInput(id) {
+    var div = document.getElementById(id);
+    var conteudo = "";
+    switch (id) {
+        case 'nome':
+            conteudo += "<input name='nome' type='text'>";
+            break;
+        case 'dataNascimento':
+            conteudo += "<p>Entre:</p><input name='dataNascimentoInicial' type='date'><br><p>E:</p><input name='dataNascimentoFinal' type='date'>";
+            break;
+        case 'UF':
+            conteudo += "<select id=\"estado\" class=\"form-control-static\" name=\"UF\"><option value=\"AC\">AC</option><option value=\"AL\">AL</option><option value=\"AP\">AP</option><option value=\"AM\">AM</option><option value=\"BA\">BA</option><option value=\"CE\">CE</option><option value=\"DF\">DF</option><option value=\"ES\">ES</option><option value=\"GO\">GO</option><option value=\"MA\">MA</option><option value=\"MS\">MS</option><option value=\"MT\">MT</option><option value=\"MG\">MG</option><option value=\"PA\">PA</option><option value=\"PB\">PB</option><option value=\"PR\">PR</option><option value=\"PE\">PE</option><option value=\"PI\">PI</option><option value=\"RJ\">RJ</option><option value=\"RN\">RN</option><option value=\"RS\">RS</option><option value=\"RO\">RO</option><option value=\"RR\">RR</option><option value=\"SC\">SC</option><option value=\"SP\">SP</option><option value=\"SE\">SE</option><option value=\"TO\">TO</option></select>";
+            break;
+        case 'cidade':
+            conteudo += "<input name='municipio' type='text'>";
+            break;
+        case 'cpf':
+            conteudo += "<input name='cpf' type='text'>";
+            break;
+        case 'rg':
+            conteudo += "<input name='rg' type='text'>";
+            break;
+        case 'cep':
+            conteudo += "<input name='cep' type='text'>";
+            break;
+    }
+
+    div.innerHTML = conteudo;
+}

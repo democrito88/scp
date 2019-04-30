@@ -1,0 +1,22 @@
+<?php
+
+include_once '../util/antiInjecao.php';
+include_once '../util/conexaoBD.php';
+session_start();
+testarSessao();
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $id = retirarInjecao($id);
+
+    $queryExcluiPessoa = "DELETE FROM `TB_Pessoa` WHERE ID = " . $id;
+
+    $conexao = conectarBD();
+    $feedbackExcluiPessoa = mysqli_query($conexao, $queryExcluiPessoa);
+    desconectarBD($conexao);
+
+    if (is_bool($feedbackExcluiPessoa)) {
+        throw new Exception("<p>N&atilde;o foi poss&iacute;vel persistir no banco de dados.</p>");
+    } else {
+        header("Location: ../index.php");
+    }
+}

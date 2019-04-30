@@ -1,0 +1,13 @@
+<?php
+
+function conectarBD() {
+    $host = "localhost";
+    $usuario = "root";
+    $senha = "";
+    $baseDeDados = "scp";
+    return mysqli_connect($host, $usuario, $senha, $baseDeDados);
+}
+
+function desconectarBD($conexao) {
+    return mysqli_close($conexao);
+}

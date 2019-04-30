@@ -1,0 +1,13 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['eNome'])) {
+    $nome = $_POST['eNome'];
+    $username = $_POST['eUsername'];
+    $senha = $_POST['eSenha'];
+    $setorId = $_POST['eSetor'];
+    $id = $_POST['memid'];
+    $conn->query("update tb_usuario set CodSetor='$setorId', Nome='$nome', NomeUsuario='$username', Senha=md5(md5('$senha')) where id='$id'");
+    salvarLog('U', 'tb_usuario', $id, '');
+}
+?>

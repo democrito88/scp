@@ -1,0 +1,90 @@
+<?php
+
+require('../util/conexaoBD.php');
+require('../util/util.php');
+require('../util/antiInjecao.php');
+//TB_Pessoa
+$ID = $_POST['ID'];
+$Nome = $_POST['Nome'];
+$Apelido = $_POST['Apelido'];
+$CPF = limparString($_POST['CPF']);
+$RG = $_POST['RG'];
+$OrgaoEmissorRG = $_POST['OrgaoEmissorRG'];
+$UFEmissorRG = $_POST['UFEmissorRG'];
+$DataNascimento = $_POST['DataNascimento'];
+$Sexo = $_POST['Sexo'];
+$NaturalidadeUF = $_POST['NaturalidadeUF'];
+$NaturalidadeMunicipio = $_POST['NaturalidadeMunicipio'];
+$EstadoCivil = $_POST['EstadoCivil'];
+$NomeDoPai = $_POST['NomeDoPai'];
+$NomeDaMae = $_POST['NomeDaMae'];
+$QueryPessoa = "INSERT INTO `tb_pessoa` (`ID`, `Nome`, `Apelido`, `CPF`, `RG`, `OrgaoEmissorRG`, `UFEmissorRG`, `DataNascimento`, `Sexo`, `NaturalidadeUF`, `NaturalidadeMunicipio`, `EstadoCivil`, `NomeDoPai`, `NomeDaMae`) VALUES ('$ID', '$Nome', '$Apelido', '$CPF', '$RG', '$OrgaoEmissorRG', '$UFEmissorRG', '$DataNascimento', '$Sexo', '$NaturalidadeUF', '$NaturalidadeMunicipio', '$EstadoCivil', '$NomeDoPai', '$NomeDaMae')"
+        . " ON DUPLICATE KEY UPDATE `Nome` = '$Nome', `Apelido` = '$Apelido', `CPF` = '$CPF', `RG` = '$RG', `OrgaoEmissorRG` = '$OrgaoEmissorRG', `UFEmissorRG` = '$UFEmissorRG', `DataNascimento` = '$DataNascimento', `Sexo` = '$Sexo', `NaturalidadeUF` = '$NaturalidadeUF', `NaturalidadeMunicipio` = '$NaturalidadeMunicipio', `EstadoCivil` = '$EstadoCivil', `NomeDoPai` = '$NomeDoPai', `NomeDaMae` = '$NomeDaMae'";
+$con = conectarBD();
+
+if ($con->query($QueryPessoa) === true) {
+    $ultimo_valor_inserido = mysqli_insert_id($con);
+    //TB_Telefone
+    $IDTelefone = $_POST['IDTelefone'];
+    $NumeroTelefone = $_POST['NumeroTelefone'];
+    $NumeroTelefone = preg_replace("/\D+/", "", $NumeroTelefone);
+
+    $Tipo = substr($NumeroTelefone, 2, 1) > 5 ? 'M' : 'F';
+    $DDI = "55";
+    $DDD = substr($NumeroTelefone, 0, 2);
+    $NumeroTelefone = $NumeroTelefone;
+    $DescricaoTelefone = $_POST['DescricaoTelefone'];
+
+    $QueryTelefone = "INSERT INTO `tb_telefone` (`ID`, `CodPessoa`, `Tipo`, `DDI`, `DDD`, `Numero`, `Descricao`) VALUES ($IDTelefone, '$ultimo_valor_inserido', '$Tipo', '$DDI', '$DDD', '$NumeroTelefone', '$DescricaoTelefone') "
+            . "ON DUPLICATE KEY UPDATE `Tipo` = '$Tipo', `DDI` = '$DDI', `DDD` = '$DDD', `Numero` = '$NumeroTelefone', `Descricao` = '$DescricaoTelefone'";
+
+    if ($con->query($QueryTelefone) === true) {
+        //echo "<p>Dados do telefone inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o telefone dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        header("Location: formularioCadastro.php?alerta=7");
+    }
+
+    //TB_Email
+    $IDEmail = $_POST['IDEmail'];
+    $Email = $_POST['Email'];
+    $DescricaoEmail = $_POST['DescricaoEmail'];
+    $QueryEmail = "INSERT INTO `tb_email` (`ID`, `CodPessoa`, `Email`, `Descricao`) VALUES ($IDEmail,'$ultimo_valor_inserido', '$Email', '$DescricaoEmail') "
+            . "ON DUPLICATE KEY UPDATE `Email` = '$Email', `Descricao` = '$DescricaoEmail'";
+    if ($con->query($QueryEmail) === true) {
+        //echo "<p>Dados do email inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o e-mail dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        header("Location: formularioCadastro.php?alerta=7");
+    }
+
+    //TB_Endereco
+    $IDEndereco = retirarInjecao($_POST['IDEndereco']);
+    $CEP = limparString(retirarInjecao($_POST['CEP']));
+    $Pais = "Brasil";
+    $UF = $_POST['UF'];
+    $Municipio = $_POST['Municipio'];
+    $Bairro = $_POST['Bairro'];
+    $Endereco = $_POST['Endereco'];
+    $Numero = $_POST['Numero'];
+    $Complemento = $_POST['Complemento'];
+    $TipoDeResidencia = $_POST['TipoDeResidencia'];
+
+    $QueryEndereco = "INSERT INTO `tb_endereco` (`ID`, `CodPessoa`, `CEP`, `Pais`, `UF`, `Municipio`, `Bairro`, `Endereco`, `Numero`, `Complemento`, `TipoDeResidencia`) VALUES ( $IDEndereco,'$ultimo_valor_inserido', '$CEP', '$Pais', '$UF', '$Municipio', '$Bairro', '$Endereco', '$Numero', '$Complemento', '$TipoDeResidencia')"
+            . " ON DUPLICATE KEY UPDATE  `CEP` = '$CEP', `Pais` = '$Pais', `UF` = '$UF', `Municipio` = '$Municipio', `Bairro` = '$Bairro', `Endereco` = '$Endereco', `Numero` = '$Numero', `Complemento` = '$Complemento', `TipoDeResidencia` = '$TipoDeResidencia'";
+
+    if ($con->query($QueryEndereco) === true) {
+        //echo "<p>Dados do endereco inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o endereço dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        header("Location: formularioCadastro.php?alerta=7");
+    }
+    //echo"<script language='javascript' type='text/javascript'>alert('Pessoa salva com sucesso. Código da pessoa: $ultimo_valor_inserido');window.location.href='formularioCadastro.php?alerta=1'</script>";
+    header("Location: formularioCadastro.php?alerta=2");
+} else {
+    //echo mysqli_error($con);
+    //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível cadastrar essa pessoa');window.location.href='formularioCadastro.php'</script>";
+    header("Location: formularioCadastro.php?alerta=7");
+}
+$con->close();
+?>

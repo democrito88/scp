@@ -1,0 +1,26 @@
+<?php
+include_once '../util/corpo.php';
+cabecalho();
+?>
+
+<div class="barra" >  </div>
+
+<section class="alinh3">
+
+    <br>
+    <label class=" control-label" for=""> Nome Usuário:</label><input class="input-group-addon " type="text" required="" nane="nomeUsuario"><br>
+    <label class=" control-label" for=""> Login :</label><input class="input-group-addon" type="text" required="" nane="login" ><br>
+    <label class=" control-label" for="">Senha:</label><input class="input-group-addon" type="password" required="" nane="senhaUser"><br>
+    <br>
+    <button class="btn btn-success">Cadastrar</button>
+    <button class="btn btn-danger">Apagar</button>
+
+
+
+</section>
+
+
+
+
+<?php
+rodape();

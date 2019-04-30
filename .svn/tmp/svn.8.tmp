@@ -1,0 +1,43 @@
+<?php
+
+include_once 'testarSessao.php';
+
+function cabecalho() {
+    session_start();
+    testarSessao();
+    echo '
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="../js/mascara.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+   <script src="../js/scripts.js"></script>
+   <script src="../js/valida_CPF.js"></script>
+   <script src="../js/formularioRelatorio.js"></script>
+   <script src="../js/cidades-estados-1.2-utf8.js"></script>
+   <link href="../css/estilo.css" rel="stylesheet" />   
+   <title>Cadastro de Pessoas</title>
+   <meta charset="utf-8"/>
+</head>
+<body>
+<header>
+<img height="250px" width="250px" id="logo" class="img-responsive" src="../img/logo.jpg">
+<div class="direita">Bem vindo(a), ' . $_SESSION['Nome'] . ' | <a href="../util/logout.php">Logout</a></div><br>
+</header>
+';
+}
+
+function rodape() {
+    echo '
+        
+<!-- Footer -->
+<footer class="rodape">
+  <p> Sistema de Cadastro de Pessoas - Prefeitura Municipal de Olinda </p> 
+</footer>
+
+</body>
+          </html>';
+}

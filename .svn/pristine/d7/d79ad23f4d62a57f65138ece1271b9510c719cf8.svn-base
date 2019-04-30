@@ -1,0 +1,91 @@
+<?php
+
+require_once('../util/conexaoBD.php');
+require_once('../util/util.php');
+require_once('../util/antiInjecao.php');
+//TB_Pessoa
+$ID = retirarInjecao($_POST['ID']);
+$Nome = retirarInjecao($_POST['Nome']);
+$Apelido = retirarInjecao($_POST['Apelido']);
+$CPF = retirarInjecao(limparString($_POST['CPF']));
+$RG = retirarInjecao(limparString($_POST['RG']));
+$OrgaoEmissorRG = retirarInjecao($_POST['OrgaoEmissorRG']);
+$UFEmissorRG = retirarInjecao($_POST['UFEmissorRG']);
+$DataNascimento = retirarInjecao($_POST['DataNascimento']);
+$Sexo = retirarInjecao($_POST['Sexo']);
+$NaturalidadeUF = retirarInjecao($_POST['NaturalidadeUF']);
+$NaturalidadeMunicipio = retirarInjecao($_POST['NaturalidadeMunicipio']);
+$EstadoCivil = retirarInjecao($_POST['EstadoCivil']);
+$NomeDoPai = retirarInjecao($_POST['NomeDoPai']);
+$NomeDaMae = retirarInjecao($_POST['NomeDaMae']);
+$QueryPessoa = "INSERT INTO `tb_pessoa` (`ID`, `Nome`, `Apelido`, `CPF`, `RG`, `OrgaoEmissorRG`, `UFEmissorRG`, `DataNascimento`, `Sexo`, `NaturalidadeUF`, `NaturalidadeMunicipio`, `EstadoCivil`, `NomeDoPai`, `NomeDaMae`) VALUES ('$ID', '$Nome', '$Apelido', '$CPF', '$RG', '$OrgaoEmissorRG', '$UFEmissorRG', '$DataNascimento', '$Sexo', '$NaturalidadeUF', '$NaturalidadeMunicipio', '$EstadoCivil', '$NomeDoPai', '$NomeDaMae')"
+        . " ON DUPLICATE KEY UPDATE `Nome` = '$Nome', `Apelido` = '$Apelido', `CPF` = '$CPF', `RG` = '$RG', `OrgaoEmissorRG` = '$OrgaoEmissorRG', `UFEmissorRG` = '$UFEmissorRG', `DataNascimento` = '$DataNascimento', `Sexo` = '$Sexo', `NaturalidadeUF` = '$NaturalidadeUF', `NaturalidadeMunicipio` = '$NaturalidadeMunicipio', `EstadoCivil` = '$EstadoCivil', `NomeDoPai` = '$NomeDoPai', `NomeDaMae` = '$NomeDaMae'";
+$con = conectarBD();
+
+if ($con->query($QueryPessoa) === true) {
+    $ultimo_valor_inserido = mysqli_insert_id($con);
+    salvarLog($ID != '0' ? 'U' : 'I', 'tb_pessoa', $ultimo_valor_inserido, '');
+    //TB_Telefone
+    $IDTelefone = retirarInjecao($_POST['IDTelefone']);
+    $NumeroTelefone = limparString(retirarInjecao($_POST['NumeroTelefone']));
+    $NumeroTelefone = preg_replace("/\D+/", "", $NumeroTelefone);
+
+    $Tipo = substr($NumeroTelefone, 2, 1) > 5 ? 'M' : 'F';
+    $DDI = "55";
+    $DDD = substr($NumeroTelefone, 0, 2);
+    $NumeroTelefone = $NumeroTelefone;
+    $DescricaoTelefone = retirarInjecao($_POST['DescricaoTelefone']);
+
+    $QueryTelefone = "INSERT INTO `tb_telefone` (`ID`, `CodPessoa`, `Tipo`, `DDI`, `DDD`, `Numero`, `Descricao`) VALUES ($IDTelefone, '$ultimo_valor_inserido', '$Tipo', '$DDI', '$DDD', '$NumeroTelefone', '$DescricaoTelefone') "
+            . "ON DUPLICATE KEY UPDATE `Tipo` = '$Tipo', `DDI` = '$DDI', `DDD` = '$DDD', `Numero` = '$NumeroTelefone', `Descricao` = '$DescricaoTelefone'";
+
+    if ($con->query($QueryTelefone) === true) {
+        //echo "<p>Dados do telefone inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o telefone dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        isset($_GET['ID']) ? header("Location: formularioCadastro.php?alerta=7") : header("Location: formularioCadastro.php?alerta=6");
+    }
+
+    //TB_Email
+    $IDEmail = retirarInjecao($_POST['IDEmail']);
+    $Email = retirarInjecao($_POST['Email']);
+    $DescricaoEmail = retirarInjecao($_POST['DescricaoEmail']);
+    $QueryEmail = "INSERT INTO `tb_email` (`ID`, `CodPessoa`, `Email`, `Descricao`) VALUES ($IDEmail,'$ultimo_valor_inserido', '$Email', '$DescricaoEmail') "
+            . "ON DUPLICATE KEY UPDATE `Email` = '$Email', `Descricao` = '$DescricaoEmail'";
+    if ($con->query($QueryEmail) === true) {
+        //echo "<p>Dados do email inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o e-mail dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        isset($_GET['ID']) ? header("Location: formularioCadastro.php?alerta=7") : header("Location: formularioCadastro.php?alerta=6");
+    }
+
+    //TB_Endereco
+    $IDEndereco = retirarInjecao($_POST['IDEndereco']);
+    $CEP = limparString(retirarInjecao($_POST['CEP']));
+    $Pais = "BRASIL";
+    $UF = retirarInjecao($_POST['UF']);
+    $Municipio = retirarInjecao($_POST['Municipio']);
+    $Bairro = retirarInjecao($_POST['Bairro']);
+    $Endereco = retirarInjecao($_POST['Endereco']);
+    $Numero = retirarInjecao($_POST['Numero']);
+    $Complemento = retirarInjecao($_POST['Complemento']);
+    $TipoDeResidencia = retirarInjecao($_POST['TipoDeResidencia']);
+
+    $QueryEndereco = "INSERT INTO `tb_endereco` (`ID`, `CodPessoa`, `CEP`, `Pais`, `UF`, `Municipio`, `Bairro`, `Endereco`, `Numero`, `Complemento`, `TipoDeResidencia`) VALUES ( $IDEndereco,'$ultimo_valor_inserido', '$CEP', '$Pais', '$UF', '$Municipio', '$Bairro', '$Endereco', '$Numero', '$Complemento', '$TipoDeResidencia')"
+            . " ON DUPLICATE KEY UPDATE  `CEP` = '$CEP', `Pais` = '$Pais', `UF` = '$UF', `Municipio` = '$Municipio', `Bairro` = '$Bairro', `Endereco` = '$Endereco', `Numero` = '$Numero', `Complemento` = '$Complemento', `TipoDeResidencia` = '$TipoDeResidencia'";
+
+    if ($con->query($QueryEndereco) === true) {
+        //echo "<p>Dados do endereco inseridos com sucesso.</p>";
+    } else {
+        //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível salvar o endereço dessa pessoa');window.location.href='formularioCadastro.php'</script>";
+        isset($_GET['ID']) ? header("Location: formularioCadastro.php?alerta=7") : header("Location: formularioCadastro.php?alerta=6");
+    }
+    //echo"<script language='javascript' type='text/javascript'>alert('Pessoa salva com sucesso. Código da pessoa: $ultimo_valor_inserido');window.location.href='formularioCadastro.php?alerta=1'</script>";
+    isset($_GET['ID']) ? header("Location: formularioCadastro.php?alerta=2") : header("Location: formularioCadastro.php?alerta=1");
+} else {
+    //echo mysqli_error($con);
+    //echo"<script language='javascript' type='text/javascript'>alert('Não foi possível cadastrar essa pessoa');window.location.href='formularioCadastro.php'</script>";
+    isset($_GET['ID']) ? header("Location: formularioCadastro.php?alerta=7") : header("Location: formularioCadastro.php?alerta=6");
+}
+$con->close();
+?>

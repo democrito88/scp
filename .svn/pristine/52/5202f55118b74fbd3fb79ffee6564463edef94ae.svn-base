@@ -1,0 +1,60 @@
+<?php
+
+include_once 'EtiquetaPDF.php';
+include_once '../util/antiInjecao.php';
+include_once '../util/conexaoBD.php';
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $complementoBuscaPessoaEndereco = "";
+    $listaIDs = array();
+    $listaIDs = $_POST['ids'];
+
+    $complementoBuscaPessoaEndereco .= " AND p.ID IN (";
+    foreach ($listaIDs as $id) {
+        $complementoBuscaPessoaEndereco .= " " . retirarInjecao($id) . " , ";
+    }
+    $complementoBuscaPessoaEndereco = substr($complementoBuscaPessoaEndereco, 0, strlen($complementoBuscaPessoaEndereco) - 3);
+    $complementoBuscaPessoaEndereco .= " );";
+    //isset($_POST['ID'])? $complementoBuscaPessoaEndereco .= " AND p.ID = '".retirarInjecao($_POST['ID'])."' " : $complementoBuscaPessoaEndereco .= "";
+
+    $queryBuscaPessoaEndereco = "SELECT p.ID Codigo,
+       p.Nome,
+       e.Pais,
+       e.CEP,
+       e.UF,
+       e.Municipio,
+       e.Bairro,
+       e.Endereco,
+       e.Numero,
+       e.Complemento,
+       t.ddd,
+       t.Numero,
+       t.Descricao,
+       concat('(', DDD, ') ', t.Numero, ' - ', t.Descricao) TelefoneFormatado,
+       concat(Endereco, ', n.º ', e.Numero, ' Bairro: ', e.Bairro, ', ', e.Municipio, '-', e.UF, ' - ', e.CEP) EnderecoCompleto
+FROM tb_pessoa p
+LEFT JOIN tb_endereco e ON p.id = e.codpessoa
+LEFT JOIN tb_telefone t ON p.id = t.codpessoa
+WHERE NOT p.excluido " . $complementoBuscaPessoaEndereco;
+    //echo $queryBuscaPessoaEndereco;
+    $conexao = conectarBD();
+    $resultados = mysqli_query($conexao, $queryBuscaPessoaEndereco);
+    desconectarBD($conexao);
+
+    $data = array();
+    $datas = array();
+    $etiquetaPDF = new EtiquetaPDF();
+    $etiquetaPDF->setDimensoesPapelCarta();
+    $etiquetaPDF->SetFont('Arial', '', 8);
+    $etiquetaPDF->AddPage();
+    
+    while ($resultado = mysqli_fetch_assoc($resultados)) {
+            $data[0] = $resultado['Nome'];
+            $data[1] = utf8_decode($resultado['EnderecoCompleto']);
+            $data[2] = $resultado['Complemento'];
+            array_push($datas, $data);
+        }
+        
+    $etiquetaPDF->ColunaDeEtiquetas($datas);
+    $etiquetaPDF->Output();
+}

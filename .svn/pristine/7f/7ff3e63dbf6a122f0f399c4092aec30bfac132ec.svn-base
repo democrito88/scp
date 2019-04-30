@@ -1,0 +1,24 @@
+<?php
+
+include_once '../util/util.php';
+include_once '../util/conexaoBD.php';
+include_once '../util/antiInjecao.php';
+session_start();
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    $login = retirarInjecao($_POST['login']);
+    $senha = retirarInjecao($_POST['senha']);
+
+    $queryBuscaLogin = "SELECT Nome FROM `tb_usuario` WHERE NomeUsuario = '" . $login . "' AND Senha = MD5(MD5('" . $senha . "'))";
+    $conexao = conectarBD();
+    $sessoes = mysqli_query($conexao, $queryBuscaLogin);
+    desconectarBD($conexao);
+
+    if (!is_bool($sessoes) && mysqli_num_rows($sessoes) == 1) {
+        while ($sessao = mysqli_fetch_assoc($sessoes)) {
+            $_SESSION['Nome'] = $sessao['Nome'];
+        }
+        header('Location: ' . getURLPadrao() . '/principal.php');
+    } else {
+       header('Location: ' . getURLPadrao() . '/login.php?alerta=10');
+    }
+}

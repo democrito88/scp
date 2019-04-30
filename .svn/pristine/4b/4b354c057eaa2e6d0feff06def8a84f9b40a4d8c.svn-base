@@ -1,0 +1,8 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['Nome'])) {
+    $descricao = $_POST['Nome'];
+    $conn->query("insert into tb_setor (Descricao) values ('$descricao')");
+}
+?>

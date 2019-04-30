@@ -1,0 +1,10 @@
+<?php
+
+include('conn.php');
+if (isset($_POST['Nome'])) {
+    $nome = $_POST['Nome'];
+    $username = $_POST['Username'];
+    $senha = $_POST['Senha'];
+    $conn->query("insert into tb_usuario (Nome, NomeUsuario, Senha) values ('$nome', '$username', md5(md5('$senha')))");
+}
+?>

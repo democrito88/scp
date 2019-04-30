@@ -1,0 +1,49 @@
+<?php
+
+include_once '../util/corpo.php';
+
+cabecalho();
+?>
+<section class="alinh">
+    <script src="../js/ajax/formularioRelatorio.js"></script>
+    <form action="gerarRelatorio.php" method="POST" >
+        <div class="col-md-8 ">
+            <div class="col-sm-6">
+                <label class=" control-label" for="">Nome:&nbsp;</label>
+                <input type="checkbox" onclick="toggleInput('nome');"><br>
+                <div id="nome" style="display: none;"></div>
+
+                <label class=" control-label" for="">Faz Aniversário...&nbsp;</label>
+                <input type="checkbox" onclick="toggleInput('dataNascimento');"><br>
+                <div id="dataNascimento" style="display: none;"></div>
+
+                <label class=" control-label" for="">Estado:&nbsp;</label>
+                <input type="checkbox" onclick="toggleInput('UF');"><br>
+                <div id="UF" style="display: none;"></div>
+            </div>
+
+            <div class="col-sm-6">
+                <label class=" control-label" for="">Cidade:&nbsp;</label>   
+                <input type="checkbox" onclick="toggleInput('cidade');"><br>
+                <div id="cidade" style="display: none;"></div>
+
+                <label class="col-md control-label" for="">CPF:&nbsp;</label>
+                <input type="checkbox" onclick="toggleInput('cpf');"><br>
+                <div id="cpf" style="display: none;"></div>
+
+                <label class="col-md control-label" for="">RG:&nbsp;</label>
+                <input type="checkbox" onclick="toggleInput('rg');"><br>
+                <div id="rg" style="display: none;"></div>
+
+                <label class="col-md control-label" for="">CEP:&nbsp;</label>  
+                <input type="checkbox" onclick="toggleInput('cep');"><br>
+                <div id="cep" style="display: none;"></div>
+            </div>
+        </div>
+        <br>
+        <button class="btn btn-success " type="submit">Gerar Relatório</button>
+    </form>
+</section>
+<?php
+
+rodape();

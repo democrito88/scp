@@ -1,0 +1,88 @@
+<?php
+
+require('../conexaoBD.php');
+
+//TB_Pessoa
+$Nome = $_POST['Nome'];
+$Apelido = $_POST['Apelido'];
+$CPF = $_POST['CPF'];
+$RG = $_POST['RG'];
+$OrgaoEmissorRG = $_POST['OrgaoEmissorRG'];
+$UFEmissorRG = $_POST['UFEmissorRG'];
+$DataNascimento = $_POST['DataNascimento'];
+$Sexo = $_POST['Sexo'];
+$NaturalidadeUF = $_POST['NaturalidadeUF'];
+$NaturalidadeMunicipio = $_POST['NaturalidadeMunicipio'];
+$EstadoCivil = $_POST['EstadoCivil'];
+$NomeDoPai = $_POST['NomeDoPai'];
+$NomeDaMae = $_POST['NomeDaMae'];
+
+$QueryPessoa = "INSERT INTO `tb_pessoa` (`Nome`, `Apelido`, `CPF`, `RG`, `OrgaoEmissorRG`, `UFEmissorRG`, `DataNascimento`, `Sexo`, `NaturalidadeUF`, `NaturalidadeMunicipio`, `EstadoCivil`, `NomeDoPai`, `NomeDaMae`, `Excluido`) VALUES ('$Nome', '$Apelido', '$CPF', '$RG', '$OrgaoEmissorRG', '$UFEmissorRG', '$DataNascimento', '$Sexo', '$NaturalidadeUF', '$NaturalidadeMunicipio', '$EstadoCivil', '$NomeDoPai', '$NomeDaMae', 0)";
+
+if ($con->query($QueryPessoa) === true) {
+    echo "<p>Dados da pessoa inseridos com sucesso.</p>";
+} else {
+    echo $QueryPessoa . $con->connect_error;
+    echo mysqli_error($con);
+}
+
+//TB_Telefone
+$NumeroTelefone = $_POST['NumeroTelefone'];
+$NumeroTelefone = preg_replace("/\D+/", "", $NumeroTelefone);
+
+$Tipo = substr($NumeroTelefone, 2, 1) > 5 ? 'M' : 'F';
+$DDI = "55";
+$DDD = substr($NumeroTelefone, 0, 2);
+$Numero = substr($NumeroTelefone, 2, strlen($NumeroTelefone));
+$DescricaoTelefone = $_POST['DescricaoTelefone'];
+
+//TB_Email
+$Email = $_POST['Email'];
+$DescricaoEmail = $_POST['DescricaoEmail'];
+
+//TB_Endereco
+$CEP = $_POST['CEP'];
+$Pais = "Brasil";
+$UF = $_POST['UF'];
+$Municipio = $_POST['Municipio'];
+$Bairro = $_POST['Bairro'];
+$Endereco = $_POST['Endereco'];
+$Numero = $_POST['Numero'];
+$Complemento = $_POST['Complemento'];
+$TipoDeResidencia = $_POST['TipoDeResidencia'];
+
+$ultimo_valor_inserido = mysqli_insert_id($con);
+
+$QueryTelefone = "INSERT INTO `tb_telefone` (`CodPessoa`, `Tipo`, `DDI`, `DDD`, `Numero`, `Descricao`, `Excluido`) VALUES ('$ultimo_valor_inserido', '$Tipo', '$DDI', '$DDD', '$Numero', '$DescricaoTelefone', 0)";
+
+if ($con->query($QueryTelefone) === true) {
+    echo "<p>Dados do telefone inseridos com sucesso.</p>";
+} else {
+    echo $QueryTelefone . $con->connect_error;
+}
+
+$QueryEmail = "INSERT INTO `tb_email` (`CodPessoa`, `Email`, `Descricao`, `Excluido`) VALUES ('$ultimo_valor_inserido', '$Email', '$DescricaoEmail', 0)";
+
+if ($con->query($QueryEmail) === true) {
+    echo "<p>Dados do email inseridos com sucesso.</p>";
+} else {
+    echo $QueryEmail . $con->connect_error;
+}
+
+
+$QueryEndereco = "INSERT INTO `tb_endereco` (`CodPessoa`, `CEP`, `Pais`, `UF`, `Municipio`, `Bairro`, `Endereco`, `Numero`, `Complemento`, `TipoDeResidencia`, `Excluido`) VALUES ('$ultimo_valor_inserido', '$CEP', '$Pais', '$UF', '$Municipio', '$Bairro', '$Endereco', '$Numero', '$Complemento', '$TipoDeResidencia', 0)";
+
+if ($con->query($QueryEndereco) === true) {
+    echo "<p>Dados do endereco inseridos com sucesso.</p>";
+} else {
+    echo $QueryEndereco . $con->connect_error;
+}
+
+$con->close();
+
+if ($QueryPessoa) {
+    echo"<script language='javascript' type='text/javascript'>alert('Pessoa cadastrada com sucesso. Código da pessoa: $ultimo_valor_inserido');window.location.href='formularioCadastro.php'</script>";
+} else {
+    echo"<script language='javascript' type='text/javascript'>alert('Não foi possível cadastrar esse usuário');window.location.href='formularioCadastro.php'</script>";
+}
+?>

@@ -1,0 +1,100 @@
+<?php
+
+include_once 'testarSessao.php';
+include_once 'util.php';
+
+function cabecalho() {
+    session_start();
+    testarSessao();
+    $indice = isset($_GET['alerta'])? retirarInjecao($_GET['alerta']) : null;
+    echo '
+<!DOCTYPE html>
+<html>
+<head>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css  ">
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" >
+   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" >
+   <script type="text/javascript"  src="http://code.jquery.com/jquery.min.js"></script>
+   <script  src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+   <!--<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script> -->
+   <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
+   <script src="' . getURLPadrao() . '/js/scripts.js"></script>
+   <script src="' . getURLPadrao() . '/js/valida_CPF.js"></script>
+   <script src="' . getURLPadrao() . '/js/formularioRelatorio.js"></script>
+   <script src="' . getURLPadrao() . '/js/cidades-estados-1.2-utf8.js"></script>
+   <link href="' . getURLPadrao() . '/css/estilo.css" rel="stylesheet" />  
+   <link rel="icon" href="' . getURLPadrao() . '/img/logo.png" />
+   <title>SCP - Sistema de Cadastro de Pessoas</title>
+   <meta charset="utf-8"/>
+</head>
+<body onload="mostrarAlerta('.$indice.');">
+<header>
+<div class="cabeca">
+  
+</div>
+ <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+  
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="' . getURLPadrao() . '">Inicio <span class="sr-only">(current)</span></a>
+      </li>
+           <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Cadastros
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="' . getURLPadrao() . '/cadastros/formularioCadastro.php">Pessoa</a>
+            <a class="dropdown-item" href="' . getURLPadrao() . '/cadastros/setor">Setores</a>
+            <a class="dropdown-item" href="' . getURLPadrao() . '/cadastros/usuario">Usuários</a>
+            <a class="dropdown-item" href="#"></a>
+        </div>
+      </li>
+       <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Consulta
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" data-toggle="modal" href="#dataDeNascimento">Por data de nascimento</a>
+        <a class="dropdown-item" data-toggle="modal" href="#porCPF">Por CPF</a>
+        <a class="dropdown-item" data-toggle="modal" href="#porNome">Por nome</a>
+        <a class="dropdown-item" data-toggle="modal" href="#porBairro">Por bairro</a>
+        <a class="dropdown-item" href="' . getURLPadrao() . '/relatorio/formularioRelatorio.php">Consulta avançada</a>
+        </div>
+      </li>
+    </ul><br>
+    <form class="form-inline my-2 my-lg-0 direita ">
+     Bem vindo(a), ' . $_SESSION['Nome'] . '&nbsp;&nbsp;|&nbsp;&nbsp; <a class="btnsair" href="' . getURLPadrao() . '/util/logout.php">[Sair]</a>
+    </form>
+  </div>
+</nav>
+
+</header>
+
+';
+}
+
+function rodape() {
+    include_once ($_SERVER['DOCUMENT_ROOT'] . '/scp/relatorio/opcoesModal.php');
+    echo '
+        
+<!-- Footer -->
+<footer class="rodape">
+   <div>
+    <img src="' . getURLPadrao() . '/img/logo.jpg" alt="logo" class="img-thumbnail" style="width:70px;">
+   <p>Sistema de Cadastro de Pessoas - SCP<br><b>Coordenadoria Geral de Informatica</b></p>
+   <small>Secretaria da Fazenda e da Administração<br>Prefeitura Municipal de Olinda</small>
+ </div>
+
+
+ 
+</footer>
+
+</body>
+          </html>';
+}

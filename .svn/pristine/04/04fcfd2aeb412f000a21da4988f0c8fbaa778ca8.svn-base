@@ -1,0 +1,22 @@
+<?php
+
+require_once __DIR__ . "/vendor/autoload.php";
+
+use Proner\PhpPimaco\Pimaco;
+use Proner\PhpPimaco\Tag;
+
+$pimaco = new Pimaco('6182');
+
+for ($i = 0; $i < 10; $i++) {
+
+    $tag = new Tag();
+    $tag->p("<b>Edson Moretti do Nascimento")->br();
+    $tag->p("Rua Eliete Silva, n.º 16 - apt 10")->br();
+    $tag->p("Kennedy - Caruaru - PE")->br();
+    $tag->p("CEP: 55036-555")->br();
+    $tag->barcode('0001', 'TYPE_CODE_128')->setWidth(2.2)->setMargin(array(0,2,1,0))->br();
+    $tag->setBorder(0.1);
+    $pimaco->addTag($tag);
+}
+
+$pimaco->output();

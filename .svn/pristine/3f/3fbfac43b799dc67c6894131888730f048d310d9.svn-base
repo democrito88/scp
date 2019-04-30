@@ -1,0 +1,21 @@
+<?php
+
+session_start();
+
+$string = ' ID = 1
+                                        Descricao = Teste
+                                        EditaConfiguracao = 0
+                                        CadastraPrivilegio = 1
+                                        CadastraPessoa = 1
+                                        CadastraSetor = 1
+                                        CadastraUsuario = 1
+                                        GeraEtiqueta = 0
+                                        TimeOut = 50';
+$_SESSION['Privilegio'] = $string;
+$config = parse_ini_string($_SESSION['Privilegio']);
+//echo $string;
+echo $config['ID'] . '<br>';
+echo $config['Descricao'] . '<br>';
+echo $config['CadastraPessoa'] . '<br>';
+echo $config['GeraEtiqueta'] . '<br>';
+echo $config['TimeOut'] . '<br>';

@@ -1,0 +1,348 @@
+<?php
+include_once '../util/corpo.php';
+include_once '../util/util.php';
+cabecalho();
+?>
+<section>
+    <form class="form-horizontal col-md-12" action="insert.php" method="post">
+        <fieldset>
+            <div class="panel panel-primary">
+                <div class="panel-heading">Cadastro de Pessoa</div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-2 control-label">
+                            <p class="help-block">
+                            <h11>* <b>Campo Obrigatório</b> </h11>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            CPF 
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input autofocus onblur="TestaCPF(this)" onkeypress="mascara(this)" value="<?php echo empty(issetGetOuPostComRetorno('CPF')) ? '' : substr_replace(substr_replace(substr_replace(issetGetOuPostComRetorno('CPF'), '-', 9, 0), '.', 6, 0), '.', 3, 0); ?>" name="CPF" class="form-control input-md" id="CPF" required="" type="text" maxlength="14" pattern="[\d.-]{14}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Nome 
+                        </label>
+                        <div class="col-md-5">
+                            <input id="Nome" value="<?php echo issetGetOuPostComRetorno('Nome'); ?>" name="Nome" placeholder="" class="form-control input-md"  type="text">
+                        </div>
+                        <label class="col-md-1 control-label">
+                            Apelido
+
+                        </label>
+                        <div class="col-md-2">
+                            <input id="Apelido" value="<?php echo issetGetOuPostComRetorno('Apelido'); ?>" name="Apelido" placeholder="" class="form-control input-md"  type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Nome Do Pai
+                        </label>
+                        <div class="col-md-8">
+                            <input id="NomeDoPai" value="<?php echo issetGetOuPostComRetorno('NomeDoPai'); ?>" name="NomeDoPai" placeholder="" class="form-control input-md"  type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Nome Da Mãe
+                        </label>
+                        <div class="col-md-8">
+                            <input id="NomeDaMae" value="<?php echo issetGetOuPostComRetorno('NomeDaMae'); ?>" name="NomeDaMae" placeholder="" class="form-control input-md"  type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Nascimento
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input type="date" value="<?php echo issetGetOuPostComRetorno('DataNascimento'); ?>" name="DataNascimento" id="dataNascimento" placeholder="DD/MM/AAAA" class="form-control input-md" required=""  OnKeyPress="formatar('##/##/####', this)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            RG
+                        </label>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <input id="RG" value="<?php echo issetGetOuPostComRetorno('RG'); ?>" name="RG" placeholder="Apenas números" class="form-control input-md"  type="text" >
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Orgão Emissor</span>
+                                    <select class="form-control-static" id="OrgaoEmissorRG" name="OrgaoEmissorRG" >
+                                        <?php
+                                        $opcoesOrgaoEmissor = array("", "SDS", "SSP", "Outros");
+                                        foreach ($opcoesOrgaoEmissor as $key => $value) {
+                                            if ($value == $_GET['OrgaoEmissorRG']) {
+                                                echo('<option selected="selected" value=' . $value . '>' . $value . '</option>');
+                                            } else {
+                                                echo('<option value=' . $value . '>' . $value . '</option>');
+                                            }
+                                        }
+                                        ?>
+                                        <!--                                        <option value=""></option>
+                                                                                <option value="sds">SDS</option>
+                                                                                <option value="ssp">SSP</option>
+                                                                                <option value="outros">Outros</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon" name="" >Estado Emissor</span>
+                                    <select id="UFEmissorRG"  class="form-control-static" name="UFEmissorRG">
+                                        <script language="JavaScript" type="text/javascript" charset="utf-8">
+                                            new dgCidadesEstados({
+                                                estado: document.getElementById('UFEmissorRG')
+                                            })
+                                        </script>
+                                        <script language="JavaScript" type="text/javascript" charset="utf-8">
+                                            selecionarEstado(document.getElementById('UFEmissorRG'), '<?php echo issetGetOuPostComRetorno('UFEmissorRG'); ?>');
+                                        </script>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Sexo
+                            <!--<h11>*</h11>-->
+                        </label>
+                        <div class="radio col-md-10" id="sexo">
+                            <input type="radio" name="Sexo" value="N"> Não informado<br>
+                            <input type="radio" name="Sexo" value="F"> Feminino<br>
+                            <input type="radio" name="Sexo" value="M"> Masculino 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Estado Civil
+                        </label>
+                        <div class="col-md-1">
+                            <div class="input-group">
+                                <!--<span class="input-group-addon">Estado cívil</span>-->
+                                <select id="EstadoCivil" class="form-control-static" name="EstadoCivil" >
+                                    <?php
+                                    $opcoesEstadoCivil = array("Não informado", "Solteiro(a)", "Casado(a)", "Divorciado(a)", "Viúvo(a)");
+                                    $opcoesValue = array("N", "S", "C", "D", "V");
+                                    $i = 0;
+                                    foreach ($opcoesEstadoCivil as $key => $value) {
+                                        if ($value == $_GET['EstadoCivil']) {
+                                            echo('<option selected="selected" value=' . $opcoesValue[$i++] . '>' . $value . '</option>');
+                                        } else {
+                                            echo('<option value=' . $opcoesValue[$i++] . '>' . $value . '</option>');
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!--</div>-->
+                    <!--<div class="panel-body">-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Telefone 
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-earphone"></i></span>
+                                <input type="text" value="<?php
+                                $tel = issetGetOuPostComRetorno('NumeroTelefone');
+                                echo empty(issetGetOuPostComRetorno('NumeroTelefone')) ? '' : substr_replace(substr_replace(substr_replace($tel, ') ', 2, 0), '(', 0, 0), '-', strlen($tel) == 10 ? 9 : 10, 0);
+                                ?>" name="NumeroTelefone" id="NumeroTelefone" size="20"  maxlength="15" class="form-control" placeholder="(XX) XXXXX-XXXX"  required=""onkeypress="mascara(this)"> 
+                                <span class="input-group-addon">Descrição</span>
+                                
+                                <input type="text" value="<?php echo issetGetOuPostComRetorno('DescricaoTelefone'); ?>"  name="DescricaoTelefone" id="DescricaoTelefone" size="20" maxlength="20" value="Pessoal" class="form-control" > 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Email 
+                        </label>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
+                                <input id="Email" value="<?php echo issetGetOuPostComRetorno('Email'); ?>" name="Email" class="form-control" type="email" placeholder="email@domimio.com.br"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" >
+                                <span class="input-group-addon">Descrição</span>
+                                <input id="DescricaoEmail" value="<?php echo issetGetOuPostComRetorno('DescricaoEmail'); ?>" name="DescricaoEmail" class="form-control" type="text" value="Pessoal" >
+                            </div>
+                        </div>
+                    </div>
+                    <hr >
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Naturalidade
+                        </label>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Estado</span>
+                                <select id="NaturalidadeUF" class="form-control-static" name="NaturalidadeUF" >
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Município</span>
+                                <select id="NaturalidadeMunicipio" class="form-control-static" name="NaturalidadeMunicipio" >
+                                    <script language="JavaScript" type="text/javascript" charset="utf-8">
+                            new dgCidadesEstados({
+                                cidade: document.getElementById('NaturalidadeMunicipio'),
+                                estado: document.getElementById('NaturalidadeUF')
+                            })
+                        </script>
+                        <script language="JavaScript" type="text/javascript" charset="utf-8">
+                            selecionarEstado(document.getElementById('NaturalidadeUF'), '<?php echo issetGetOuPostComRetorno('NaturalidadeUF'); ?>');
+                        </script>
+                        <script language="JavaScript" type="text/javascript" charset="utf-8">
+                            var cidade = {
+                                cidadeEncontrada: '<?php echo issetGetOuPostComRetorno('NaturalidadeMunicipio'); ?>'
+                            };
+                            var select = document.getElementById('NaturalidadeMunicipio');
+                            for (index in cidade) {
+                                select.options[select.options.length] = new Option(cidade[index], index);
+                            }
+                        </script>
+                                </select>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <hr width="100%" />
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            CEP 
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <input id="CEP" value="<?php echo empty(issetGetOuPostComRetorno('CEP')) ? '' : substr_replace(issetGetOuPostComRetorno('CEP'), '-', 5, 0); ?>" name="CEP" onkeypress="mascara(this);" onkeyup="pesquisacep(this);" placeholder="Apenas números" class="form-control input-md" required="" value="" type="text" maxlength="9" pattern="[0-9\-]+$">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary" id="botaoPesquisarCEP" onclick="pesquisacep(document.getElementById('CEP'))">Pesquisar</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Endereçoo
+                            <h11>*</h11>
+                        </label>
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Estado</span>
+                                <select id="Estado" class="form-control-static" name="UF">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    Cidade
+                                    <h11>*</h11>
+                                </span>
+                                <select name="Municipio" id="Cidade" class="form-control-static">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group">&nbsp
+                                <span class="input-group-addon">
+                                    Bairro
+                                    <h11>*</h11>
+                                </span>
+                                <input id="Bairro"  value="<?php echo issetGetOuPostComRetorno('Bairro'); ?>" name="Bairro" class="form-control" placeholder="" required=""  type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="prependedtext">
+                        </label>
+                        <div class="col-md">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        Endereço
+                                        <h11>*</h11>
+                                    </span>
+                                    <input id="Endereco"  value="<?php echo issetGetOuPostComRetorno('Endereco'); ?>" name="Endereco" class="form-control" placeholder="" required=""  type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        N.º
+                                        <h11>*</h11>
+                                    </span>
+                                    <input id="Numero"  value="<?php echo issetGetOuPostComRetorno('Numero'); ?>" name="Numero" class="form-control" placeholder="" required=""  type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        Complemento
+                                    </span>
+                                    <!--<select id="cidade"  class="form-control-static" name="cidade"></select-->
+                                    <input id="Complemento"  value="<?php echo issetGetOuPostComRetorno('Complemento'); ?>" name="Complemento" class="form-control" placeholder=""    type="text"> 
+                                </div>
+                            </div>
+                        </div>
+                        <label class="col-md-2 control-label" for="prependedtext">
+                            Tipo de residência 
+                            <!--<h11>*</h11>-->
+                        </label>
+                        <div class="radio col-md-10" id="tipoDeResidencia" name="TipoDeResidencia">
+                            <input type="radio" name="TipoDeResidencia" value="N"> Não informado<br>
+                            <input type="radio" name="TipoDeResidencia" value="P"> Própria<br>
+                            <input type="radio" name="TipoDeResidencia" value="A"> Alugada 
+                        </div>
+                    </div>
+                </div><br>
+                <div class="form-group">
+                    <label class="col-md-5 control-label" for="Cadastrar"></label>
+                    <div class="col-md">
+                        <button id="Cadastrar" name="Cadastrar" class="btn-lg btn-success" type="Submit">Cadastrar</button>
+                        <button id="Cancelar" name="Cancelar" onclick=" requestFocus(document.getElementById('CPF'));"class="btn-lg btn-danger" type="Reset">&nbsp&nbspLimpar&nbsp&nbsp</button>
+                    </div>
+                </div>
+                <script language="JavaScript" type="text/javascript" charset="utf-8">
+                    new dgCidadesEstados({
+                        cidade: document.getElementById('Cidade'),
+                        estado: document.getElementById('Estado')
+                    })
+                </script>
+                <script language="JavaScript" type="text/javascript" charset="utf-8">
+                    selecionarEstado(document.getElementById('Estado'), '<?php echo issetGetOuPostComRetorno('Estado'); ?>');
+                </script>
+                <script language="JavaScript" type="text/javascript" charset="utf-8">
+                    var cidade = {
+                        cidadeEncontrada: '<?php echo issetGetOuPostComRetorno('Cidade'); ?>'
+                    };
+                    var select = document.getElementById('Cidade');
+                    for (index in cidade) {
+                        select.options[select.options.length] = new Option(cidade[index], index);
+                    }
+                </script>
+            </div>
+        </fieldset>
+    </form>
+</section>
+<?php
+rodape();

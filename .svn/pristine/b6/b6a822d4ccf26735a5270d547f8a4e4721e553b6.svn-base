@@ -1,0 +1,11 @@
+<?php
+
+function testarSessao() {
+    if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+        $uri = 'https://';
+    } else {
+        $uri = 'http://';
+    }
+    $uri .= $_SERVER['HTTP_HOST'];
+    isset($_SESSION['Nome']) ? $nomeUsuario = $_SESSION['Nome'] : header("Location: $uri/cadastroPessoas/util/logout.php");
+}

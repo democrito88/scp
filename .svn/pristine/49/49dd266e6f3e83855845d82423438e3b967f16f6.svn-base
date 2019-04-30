@@ -1,0 +1,21 @@
+<?php
+$host = 'localhost';
+$user = 'root';
+$pass = '';
+$db   = 'scp';
+ 
+// conexão e seleção do banco de dados
+$con = mysqli_connect($host, $user, $pass, $db);
+
+/*
+if ($con) {
+	echo "Conexão feita com sucesso.";
+} else {
+	echo "Erro ao tentar conextar ao banco de dados.";
+}
+*/
+
+?>
+
+ 
+ 

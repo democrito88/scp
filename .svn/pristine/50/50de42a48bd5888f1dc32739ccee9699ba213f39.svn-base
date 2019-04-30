@@ -1,0 +1,87 @@
+<?php
+include_once '../util/antiInjecao.php';
+include_once '../util/conexaoBD.php';
+include_once '../util/corpo.php';
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+
+    $complementoQuery = "";
+
+    isset($_POST['nome']) ? $complementoQuery .= " AND p.Nome LIKE '" . retirarInjecao($_POST['nome']) . "' " : $complementoQuery .= "";
+    isset($_POST['dataNascimentoInicial']) ? $complementoQuery .= " AND p.DataNascimento BETEWEEN '" . retirarInjecao($_POST['dataNascimentoInicial']) . "' " : $complementoQuery .= "";
+    isset($_POST['dataNascimentoFinal']) ? $complementoQuery .= " AND '" . retirarInjecao($_POST['dataNascimentoFinal']) . "' " : $complementoQuery .= "";
+    isset($_POST['UF']) ? $complementoQuery .= " AND e.UF = '" . retirarInjecao($_POST['UF']) . "' " : $complementoQuery .= "";
+    isset($_POST['municipio']) ? $complementoQuery .= "AND e.Municipio = '" . retirarInjecao($_POST['municipio']) . "' " : $complementoQuery .= "";
+    isset($_POST['cpf']) ? $complementoQuery .= " AND p.CPF = '" . retirarInjecao($_POST['cpf']) . "' " : $complementoQuery .= "";
+    isset($_POST['rg']) ? $complementoQuery .= "AND p.RG = '" . retirarInjecao($_POST['rg']) . "' " : $complementoQuery .= "";
+    isset($_POST['cep']) ? $complementoQuery .= "AND p.CEP = '" . retirarInjecao($_POST['cep']) . "' " : $complementoQuery .= "";
+
+    $complementoQuery .= " ;";
+
+    $queryBuscaPessoa = "SELECT p.ID Codigo,
+       p.Nome,
+       p.RG,
+       p.CPF,
+       DATE_FORMAT(p.DataNascimento, '%d-%m-%Y') DataNascimento,
+       e.Pais,
+       e.CEP,
+       e.UF,
+       e.Municipio,
+       e.Bairro,
+       e.Endereco,
+       e.Numero,
+       e.Complemento,
+       t.ddd,
+       t.Numero,
+       t.Descricao,
+       concat('(', DDD, ') ', t.Numero, ' - ', t.Descricao) TelefoneFormatado,
+       concat(Endereco, ', n.º ', e.Numero, ' Bairro: ', e.Bairro, ', ', e.Municipio, '-', e.UF, ' - ', e.CEP) EnderecoCompleto
+FROM tb_pessoa p
+LEFT JOIN tb_endereco e ON p.id = e.codpessoa
+LEFT JOIN tb_telefone t ON p.id = t.codpessoa
+WHERE NOT p.excluido " . $complementoQuery;
+
+    $conexao = conectarBD();
+    $resultados = mysqli_query($conexao, $queryBuscaPessoa);
+    desconectarBD($conexao);
+}
+cabecalho();
+?>
+<div class="barra"></div>
+<section  class="alinh2">
+    <h2 style="color: #666;">Busca de Cadastros</h2>
+    <button class="btn btn-primary" onclick="window.location.replace('../principal.php')">Voltar</button><br><br>
+
+    <table class="table table-bordered table-striped">
+        <thead><tr><th>Nome</th><th>CPF</th><th>RG</th><th>CEP</th><th>Cidade</th><th>Estado</th><th>Data de Nascimento</th></tr></thead>
+        <tbody>
+            <?php
+            if (!is_bool($resultados)) {
+                $listaIDs = array();
+                while ($resultado = mysqli_fetch_assoc($resultados)) {
+                    array_push($listaIDs, $resultado['Codigo']);
+                    echo "<tr><td>" . $resultado['Nome'] . "</td>" .
+                    "<td>" . $resultado['CPF'] . "</td>" .
+                    "<td>" . $resultado['RG'] . "</td>" .
+                    "<td>" . $resultado['CEP'] . "</td>" .
+                    "<td>" . $resultado['Municipio'] . "</td>" .
+                    "<td>" . $resultado['UF'] . "</td>" .
+                    "<td>" . $resultado['DataNascimento'] . "</td>
+                        </tr>";
+                }
+            }
+            ?>
+        </tbody>
+    </table>
+    <form action="../imprimir/geraPDF.php" method="POST">
+        <input type="text" name="ids[]" value="<?php
+        foreach ($listaIDs as $id) {
+            echo $id . ", ";
+        }
+        echo " 0";
+        ?>" style="display: none;">
+        <button class="btn btn-danger" type="submit">Gerar PDF</button><br><br>
+    </form>
+</section>
+<?php
+rodape();
